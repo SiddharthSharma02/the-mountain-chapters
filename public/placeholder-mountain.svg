@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0e8d8"/>
+      <stop offset="1" stop-color="#e6dcc6"/>
+    </linearGradient>
+    <linearGradient id="mtn-far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fb3c8"/>
+      <stop offset="1" stop-color="#7d96ad"/>
+    </linearGradient>
+    <linearGradient id="mtn-mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5d7a93"/>
+      <stop offset="1" stop-color="#3e5a73"/>
+    </linearGradient>
+    <linearGradient id="mtn-near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a4258"/>
+      <stop offset="1" stop-color="#16263c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="940" cy="180" r="60" fill="#d99a3f" opacity="0.25"/>
+  <path d="M0 520 L180 320 L320 440 L460 260 L620 420 L780 300 L940 460 L1080 360 L1200 480 L1200 800 L0 800 Z" fill="url(#mtn-far)"/>
+  <path d="M0 600 L140 440 L300 540 L440 380 L600 520 L760 420 L920 560 L1060 460 L1200 560 L1200 800 L0 800 Z" fill="url(#mtn-mid)"/>
+  <path d="M0 720 L120 580 L280 660 L420 520 L580 640 L740 560 L900 660 L1060 580 L1200 640 L1200 800 L0 800 Z" fill="url(#mtn-near)"/>
+  <text x="600" y="760" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="28" fill="#faf5eb" opacity="0.7" letter-spacing="3">THE MOUNTAIN CHAPTERS</text>
+</svg>

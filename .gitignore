@@ -39,3 +39,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent / IDE config
+.agents/
+.claude/
+.codex/
+.devin/
+.mcp.json
+skills-lock.json
+
+# Supabase local temp
+supabase/.temp/
+
+# temp files
+*.tmp
