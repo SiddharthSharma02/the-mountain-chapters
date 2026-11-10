@@ -1,59 +1,61 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "@/components/site/icons";
+import { EmptyState, PageHeader } from "@/components/site/page-header";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import { getRoadTripChapters } from "@/lib/data/content";
 
-export const metadata = { title: "Road Trips | The Mountain Chapters" };
+export const metadata = { title: "Road Trips" };
 
 export default async function RoadTripsPage() {
   const chapters = await getRoadTripChapters();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="font-serif text-3xl font-bold text-navy sm:text-4xl">
-        Road Trip Chapters
-      </h1>
-      <p className="mt-2 max-w-xl text-navy/70">
-        Scenic routes, hidden villages and mountain passes — planned for you,
-        chapter by chapter.
-      </p>
-
+    <>
+      <PageHeader
+        eyebrow="Road trips"
+        title="The road, in chapters"
+        intro="Mountain passes, river valleys and villages, broken into days you can actually drive."
+      />
       {chapters.length > 0 ? (
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {chapters.map((c) => (
-            <Link
-              key={c.id}
-              href={`/road-trips/${c.slug}`}
-              className="group overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-navy/5 transition-shadow hover:shadow-md"
-            >
-              <div className="relative aspect-4/3 w-full">
-                <Image
-                  src={c.cover_image || "/placeholder-mountain.svg"}
-                  alt={c.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <span className="absolute left-3 top-3 rounded-full bg-navy px-3 py-1 text-xs font-bold text-gold">
-                  {String(c.step_number).padStart(2, "0")}
-                </span>
-              </div>
-              <div className="p-5">
-                <p className="font-serif text-lg font-semibold text-navy">
-                  {c.title}
-                </p>
-                <p className="mt-1 text-xs text-navy/60">
-                  {c.distance_km ? `${c.distance_km} km` : ""}
-                  {c.distance_km && c.duration_days ? " · " : ""}
-                  {c.duration_days ? `${c.duration_days} days` : ""}
-                </p>
-              </div>
-            </Link>
+        <ol className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-24 sm:px-6 lg:px-8">
+          {chapters.map((c, i) => (
+            <li key={c.id}>
+              <Link
+                href={`/road-trips/${c.slug}`}
+                className="group grid overflow-hidden rounded-[28px] bg-white ring-1 ring-navy/10 transition-shadow hover:shadow-[0_24px_60px_-30px_rgba(22,38,60,0.35)] md:grid-cols-2"
+              >
+                <div className={`relative aspect-[4/3] overflow-hidden bg-cream-dark md:aspect-auto md:min-h-80 ${i % 2 ? "md:order-2" : ""}`}>
+                  <Image
+                    src={c.cover_image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    priority={i === 0}
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="flex flex-col justify-center p-7 sm:p-12">
+                  <p className="font-serif text-5xl text-gold">{String(c.step_number).padStart(2, "0")}</p>
+                  <h2 className="mt-4 font-serif text-3xl leading-tight text-navy sm:text-4xl">{c.title}</h2>
+                  {(c.distance_km || c.duration_days) && (
+                    <p className="mt-3 text-sm text-navy/60">
+                      {[c.distance_km && `${c.distance_km} km`, c.duration_days && `${c.duration_days} ${c.duration_days === 1 ? "day" : "days"}`]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  )}
+                  {c.description && <p className="mt-4 line-clamp-3 text-[15px] leading-relaxed text-navy/70">{c.description}</p>}
+                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-navy underline decoration-gold underline-offset-4">
+                    Read this chapter <ArrowRight />
+                  </span>
+                </div>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ol>
       ) : (
-        <div className="mt-10 rounded-2xl border border-dashed border-navy/20 p-10 text-center text-navy/50">
-          No road trip chapters yet. Add some from the admin dashboard.
-        </div>
+        <EmptyState message="Our road trip chapters are being written. Ask us about a route you have in mind." />
       )}
-    </div>
+    </>
   );
 }

@@ -215,6 +215,33 @@ end $$;
 reset role;
 
 -- ---------------------------------------------------------------------------
+-- 5b. A signed-in user cannot promote themselves to admin
+-- ---------------------------------------------------------------------------
+insert into auth.users (id, email) values ('d0000000-0000-4000-8000-0000000000fe', 'dbtest-role@example.com');
+-- The signup trigger creates the profile; make sure it exists either way.
+insert into public.profiles (id, role) values ('d0000000-0000-4000-8000-0000000000fe', 'user')
+  on conflict (id) do nothing;
+
+select set_config('request.jwt.claims',
+  '{"sub":"d0000000-0000-4000-8000-0000000000fe","role":"authenticated"}', true);
+set local role authenticated;
+
+do $$
+declare n int;
+begin
+  begin
+    update public.profiles set role = 'admin' where id = auth.uid();
+    raise exception 'FAIL user: promoted themselves to admin';
+  exception when insufficient_privilege then null; end;
+  -- Editing their own name must still work.
+  update public.profiles set full_name = 'Renamed' where id = auth.uid();
+  get diagnostics n = row_count;
+  if n <> 1 then raise exception 'FAIL user: could not edit own name'; end if;
+end $$;
+
+reset role;
+
+-- ---------------------------------------------------------------------------
 -- 6. Admin (an existing profiles.role = 'admin' user)
 -- ---------------------------------------------------------------------------
 select set_config('request.jwt.claims',

@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { setMessageStatus, deleteMessage } from "@/lib/actions/admin-messages";
-import { DeleteButton } from "@/components/admin/delete-button";
+import { ActionButton, DeleteButton } from "@/components/admin/delete-button";
 
 export default async function AdminMessagesPage() {
   const supabase = await createClient();
@@ -33,18 +33,10 @@ export default async function AdminMessagesPage() {
             <p className="mt-3 text-sm text-navy/80">{m.message}</p>
             <div className="mt-3 flex gap-4">
               {m.status !== "read" && (
-                <form action={setMessageStatus.bind(null, m.id, "read")}>
-                  <button className="text-sm font-medium text-gold-dark hover:text-gold">
-                    Mark as Read
-                  </button>
-                </form>
+                <ActionButton action={setMessageStatus.bind(null, m.id, "read")} label="Mark as Read" className="text-sm font-medium text-gold-dark hover:text-gold" />
               )}
               {m.status !== "archived" && (
-                <form action={setMessageStatus.bind(null, m.id, "archived")}>
-                  <button className="text-sm font-medium text-navy/60 hover:text-navy">
-                    Archive
-                  </button>
-                </form>
+                <ActionButton action={setMessageStatus.bind(null, m.id, "archived")} label="Archive" className="text-sm font-medium text-navy/60 hover:text-navy" />
               )}
               <DeleteButton action={deleteMessage.bind(null, m.id)} />
             </div>

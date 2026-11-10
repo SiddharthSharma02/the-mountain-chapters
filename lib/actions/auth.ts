@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { isLikelySpam } from "@/lib/spam";
 
 export async function signIn(
   _prevState: { success: boolean; message: string } | null,
@@ -31,6 +32,10 @@ export async function signUp(
   const password = String(formData.get("password") || "");
   const fullName = String(formData.get("full_name") || "").trim();
   const phone = String(formData.get("phone") || "").trim();
+
+  if (isLikelySpam(formData)) {
+    return { success: false, message: "Something went wrong. Please try again." };
+  }
 
   if (!phone) {
     return { success: false, message: "Phone number is required." };

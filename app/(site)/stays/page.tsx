@@ -1,28 +1,24 @@
+import { EmptyState, PageHeader } from "@/components/site/page-header";
 import { StayList } from "@/components/site/stay-list";
 import { getAllStays } from "@/lib/data/content";
 
-export const metadata = { title: "Stays | The Mountain Chapters" };
+export const metadata = { title: "Stays" };
 
 export default async function StaysPage() {
   const stays = await getAllStays();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="font-serif text-3xl font-bold text-navy sm:text-4xl">
-        Stays
-      </h1>
-      <p className="mt-2 max-w-xl text-navy/70">
-        Handpicked homestays, cottages and boutique properties in the lap of
-        the mountains.
-      </p>
-
+    <>
+      <PageHeader
+        eyebrow="Where to stay"
+        title="Stays with a view worth waking up for"
+        intro="Homestays, cottages and small lodges across Himachal, each one visited and chosen by us."
+      />
       {stays.length > 0 ? (
         <StayList stays={stays} />
       ) : (
-        <div className="mt-10 rounded-2xl border border-dashed border-navy/20 p-10 text-center text-navy/50">
-          No stays yet. Add some from the admin dashboard.
-        </div>
+        <EmptyState message="We're adding our first stays. Tell us where you're headed and we'll suggest one." />
       )}
-    </div>
+    </>
   );
 }

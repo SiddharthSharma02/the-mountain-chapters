@@ -1,35 +1,44 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { adminMutation, check, type AdminResult } from "@/lib/auth/admin-mutation";
 import { revalidatePath } from "next/cache";
 import type { MessageStatus } from "@/lib/types/database";
 
-export async function setMessageStatus(id: string, status: MessageStatus) {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("contact_messages")
-    .update({ status })
-    .eq("id", id);
-  if (error) throw new Error(error.message);
+export async function setMessageStatus(id: string, status: MessageStatus): Promise<AdminResult> {
+  const result = await adminMutation(async (supabase) => {
+    const { error } = await supabase
+      .from("contact_messages")
+      .update({ status })
+      .eq("id", id);
+    check(error);
+  });
+  if (result) return result;
   revalidatePath("/admin/messages");
+  return undefined;
 }
 
-export async function deleteMessage(id: string) {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("contact_messages")
-    .delete()
-    .eq("id", id);
-  if (error) throw new Error(error.message);
+export async function deleteMessage(id: string): Promise<AdminResult> {
+  const result = await adminMutation(async (supabase) => {
+    const { error } = await supabase
+      .from("contact_messages")
+      .delete()
+      .eq("id", id);
+    check(error);
+  });
+  if (result) return result;
   revalidatePath("/admin/messages");
+  return undefined;
 }
 
-export async function deleteSubscriber(id: string) {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("newsletter_subscribers")
-    .delete()
-    .eq("id", id);
-  if (error) throw new Error(error.message);
+export async function deleteSubscriber(id: string): Promise<AdminResult> {
+  const result = await adminMutation(async (supabase) => {
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .delete()
+      .eq("id", id);
+    check(error);
+  });
+  if (result) return result;
   revalidatePath("/admin/subscribers");
+  return undefined;
 }

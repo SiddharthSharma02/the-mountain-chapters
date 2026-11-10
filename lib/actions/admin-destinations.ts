@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { adminMutation, check, type AdminResult } from "@/lib/auth/admin-mutation";
 import { uploadImage } from "@/lib/storage/upload";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -26,36 +26,43 @@ async function parseForm(formData: FormData) {
   };
 }
 
-export async function createDestination(formData: FormData) {
-  const supabase = await createClient();
-  const values = await parseForm(formData);
-  const { error } = await supabase.from("destinations").insert(values);
-  if (error) throw new Error(error.message);
+export async function createDestination(formData: FormData): Promise<AdminResult> {
+  const result = await adminMutation(async (supabase) => {
+    const values = await parseForm(formData);
+    const { error } = await supabase.from("destinations").insert(values);
+    check(error);
+  });
+  if (result) return result;
   revalidatePath("/admin/destinations");
   revalidatePath("/destinations");
   revalidatePath("/");
   redirect("/admin/destinations");
 }
 
-export async function updateDestination(id: string, formData: FormData) {
-  const supabase = await createClient();
-  const values = await parseForm(formData);
-  const { error } = await supabase
-    .from("destinations")
-    .update(values)
-    .eq("id", id);
-  if (error) throw new Error(error.message);
+export async function updateDestination(id: string, formData: FormData): Promise<AdminResult> {
+  const result = await adminMutation(async (supabase) => {
+    const values = await parseForm(formData);
+    const { error } = await supabase
+      .from("destinations")
+      .update(values)
+      .eq("id", id);
+    check(error);
+  });
+  if (result) return result;
   revalidatePath("/admin/destinations");
   revalidatePath("/destinations");
   revalidatePath("/");
   redirect("/admin/destinations");
 }
 
-export async function deleteDestination(id: string) {
-  const supabase = await createClient();
-  const { error } = await supabase.from("destinations").delete().eq("id", id);
-  if (error) throw new Error(error.message);
+export async function deleteDestination(id: string): Promise<AdminResult> {
+  const result = await adminMutation(async (supabase) => {
+    const { error } = await supabase.from("destinations").delete().eq("id", id);
+    check(error);
+  });
+  if (result) return result;
   revalidatePath("/admin/destinations");
   revalidatePath("/destinations");
   revalidatePath("/");
+  return undefined;
 }

@@ -1,15 +1,16 @@
 import type { Destination } from "@/lib/types/database";
 import { Field, inputClass } from "@/components/admin/form-field";
+import { AdminForm, SubmitButton } from "@/components/admin/admin-form";
 
 export function DestinationForm({
   destination,
   action,
 }: {
   destination?: Destination;
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<{ error: string } | undefined>;
 }) {
   return (
-    <form action={action} className="flex max-w-xl flex-col gap-4">
+    <AdminForm action={action} className="flex max-w-xl flex-col gap-4">
       <Field label="Name">
         <input
           name="name"
@@ -91,12 +92,7 @@ export function DestinationForm({
         Show in Popular Destinations
       </label>
 
-      <button
-        type="submit"
-        className="mt-2 self-start rounded-full bg-navy px-6 py-3 text-sm font-semibold text-cream hover:bg-navy-light"
-      >
-        {destination ? "Save Changes" : "Create Destination"}
-      </button>
-    </form>
+      <SubmitButton>{destination ? "Save Changes" : "Create Destination"}</SubmitButton>
+    </AdminForm>
   );
 }

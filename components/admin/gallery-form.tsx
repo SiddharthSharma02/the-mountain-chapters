@@ -1,15 +1,16 @@
 import type { GalleryImage } from "@/lib/types/database";
 import { Field, inputClass } from "@/components/admin/form-field";
+import { AdminForm, SubmitButton } from "@/components/admin/admin-form";
 
 export function GalleryForm({
   image,
   action,
 }: {
   image?: GalleryImage;
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<{ error: string } | undefined>;
 }) {
   return (
-    <form action={action} className="flex max-w-xl flex-col gap-4">
+    <AdminForm action={action} className="flex max-w-xl flex-col gap-4">
       <Field label="Image">
         {image?.image_url ? (
           <img
@@ -48,12 +49,7 @@ export function GalleryForm({
           className={inputClass}
         />
       </Field>
-      <button
-        type="submit"
-        className="mt-2 self-start rounded-full bg-navy px-6 py-3 text-sm font-semibold text-cream hover:bg-navy-light"
-      >
-        {image ? "Save Changes" : "Add Image"}
-      </button>
-    </form>
+      <SubmitButton>{image ? "Save Changes" : "Add Image"}</SubmitButton>
+    </AdminForm>
   );
 }

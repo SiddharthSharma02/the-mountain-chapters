@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import Link from "next/link";
 import { CheckIcon, PinIcon, Stars } from "@/components/stays/icons";
 import { RoomCard } from "@/components/stays/room-card";

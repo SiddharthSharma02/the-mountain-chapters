@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { fieldInput, fieldLabel, formMessage, primaryButton } from "@/components/site/form-styles";
+import { SpamTrap } from "@/components/site/spam-trap";
 import { signUp } from "@/lib/actions/auth";
 
 export default function SignupPage() {
   const [state, formAction, pending] = useActionState(signUp, null);
 
   return (
-    <div className="mx-auto flex max-w-md flex-col px-4 py-16 sm:px-6">
-      <h1 className="font-serif text-3xl font-bold text-navy">
+    <div className="mx-auto flex w-full max-w-md flex-col px-5 py-16 sm:py-24">
+      <h1 className="font-serif text-[40px] leading-[1.05] text-navy sm:text-5xl">
         Create an Account
       </h1>
       <p className="mt-2 text-sm text-navy/60">
@@ -17,57 +19,58 @@ export default function SignupPage() {
       </p>
 
       <form action={formAction} className="mt-8 flex flex-col gap-4">
-        <div>
-          <label className="text-sm font-medium text-navy">Full Name</label>
+      <SpamTrap />
+        <label className="block">
+          <span className={fieldLabel}>Full Name</span>
           <input
             type="text"
             name="full_name"
+            autoComplete="name"
             required
-            className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+            className={fieldInput}
           />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-navy">Phone Number</label>
+        </label>
+        <label className="block">
+          <span className={fieldLabel}>Phone Number</span>
           <input
             type="tel"
             name="phone"
+            autoComplete="tel"
             required
             placeholder="+91 99999 99999"
-            className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+            className={fieldInput}
           />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-navy">Email</label>
+        </label>
+        <label className="block">
+          <span className={fieldLabel}>Email</span>
           <input
             type="email"
             name="email"
+            autoComplete="email"
             required
-            className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+            className={fieldInput}
           />
-        </div>
-        <div>
-          <label className="text-sm font-medium text-navy">Password</label>
+        </label>
+        <label className="block">
+          <span className={fieldLabel}>Password</span>
           <input
             type="password"
             name="password"
+            autoComplete="new-password"
             required
             minLength={6}
-            className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+            className={fieldInput}
           />
-        </div>
+        </label>
         {state && (
-          <p
-            className={`text-sm ${
-              state.success ? "text-emerald-600" : "text-red-600"
-            }`}
-          >
+          <p role="status" className={formMessage(state.success)}>
             {state.message}
           </p>
         )}
         <button
           type="submit"
           disabled={pending}
-          className="mt-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-cream hover:bg-navy-light disabled:opacity-60"
+          className={`mt-2 ${primaryButton}`}
         >
           {pending ? "Creating..." : "Create Account"}
         </button>

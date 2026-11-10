@@ -6,10 +6,10 @@ export function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <label className="text-sm font-medium text-navy">{label}</label>
+    <label className="block">
+      <span className="text-sm font-medium text-navy">{label}</span>
       <div className="mt-1">{children}</div>
-    </div>
+    </label>
   );
 }
 

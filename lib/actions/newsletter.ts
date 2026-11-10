@@ -1,15 +1,19 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { isLikelySpam, isValidEmail } from "@/lib/spam";
 
 export async function subscribeToNewsletter(
   _prevState: { success: boolean; message: string } | null,
   formData: FormData
 ) {
-  const email = String(formData.get("email") || "").trim();
+  const email = String(formData.get("email") || "").trim().toLowerCase();
 
-  if (!email || !email.includes("@")) {
+  if (!isValidEmail(email)) {
     return { success: false, message: "Please enter a valid email address." };
+  }
+  if (isLikelySpam(formData)) {
+    return { success: true, message: "Thanks for subscribing!" };
   }
 
   const supabase = await createClient();

@@ -1,15 +1,16 @@
 import type { Experience } from "@/lib/types/database";
 import { Field, inputClass } from "@/components/admin/form-field";
+import { AdminForm, SubmitButton } from "@/components/admin/admin-form";
 
 export function ExperienceForm({
   experience,
   action,
 }: {
   experience?: Experience;
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<{ error: string } | undefined>;
 }) {
   return (
-    <form action={action} className="flex max-w-xl flex-col gap-4">
+    <AdminForm action={action} className="flex max-w-xl flex-col gap-4">
       <Field label="Title">
         <input name="title" required defaultValue={experience?.title} className={inputClass} />
       </Field>
@@ -59,12 +60,7 @@ export function ExperienceForm({
           className={inputClass}
         />
       </Field>
-      <button
-        type="submit"
-        className="mt-2 self-start rounded-full bg-navy px-6 py-3 text-sm font-semibold text-cream hover:bg-navy-light"
-      >
-        {experience ? "Save Changes" : "Create Experience"}
-      </button>
-    </form>
+      <SubmitButton>{experience ? "Save Changes" : "Create Experience"}</SubmitButton>
+    </AdminForm>
   );
 }
