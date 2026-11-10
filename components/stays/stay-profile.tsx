@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import Link from "next/link";
 import { PinIcon, StarIcon } from "@/components/stays/icons";
 import { MobileBookingBar } from "@/components/stays/mobile-booking-bar";

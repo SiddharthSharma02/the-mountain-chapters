@@ -5,6 +5,7 @@ import {
   deleteUserProfile,
 } from "@/lib/actions/admin-users";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { AdminForm } from "@/components/admin/admin-form";
 
 export default async function AdminUsersPage() {
   const supabase = await createClient();
@@ -59,7 +60,7 @@ export default async function AdminUsersPage() {
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <form action={updateUserProfile} className="flex items-center gap-2">
+                  <AdminForm action={updateUserProfile} className="flex flex-wrap items-center gap-2">
                     <input type="hidden" name="id" value={user.id} />
                     <input
                       type="hidden"
@@ -73,6 +74,7 @@ export default async function AdminUsersPage() {
                     />
                     <select
                       name="role"
+                      aria-label={`Role for ${user.full_name ?? "user"}`}
                       defaultValue={user.role}
                       className="rounded-md border border-navy/20 bg-white px-2 py-1 text-xs"
                     >
@@ -85,7 +87,7 @@ export default async function AdminUsersPage() {
                     >
                       Save
                     </button>
-                  </form>
+                  </AdminForm>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <DeleteButton action={deleteUserProfile.bind(null, user.id)} />

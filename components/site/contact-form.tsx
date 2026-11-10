@@ -1,6 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
+import { fieldInput, fieldLabel, formMessage, primaryButton } from "@/components/site/form-styles";
+import { SpamTrap } from "@/components/site/spam-trap";
 import { submitContactMessage } from "@/lib/actions/contact";
 
 export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }) {
@@ -11,55 +13,55 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <div>
-        <label className="text-sm font-medium text-navy">Name</label>
+      <SpamTrap />
+      <label className="block">
+        <span className={fieldLabel}>Name</span>
         <input
           type="text"
           name="name"
+          autoComplete="name"
           required
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          className={fieldInput}
         />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-navy">Email</label>
+      </label>
+      <label className="block">
+        <span className={fieldLabel}>Email</span>
         <input
           type="email"
           name="email"
+          autoComplete="email"
           required
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          className={fieldInput}
         />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-navy">Phone</label>
+      </label>
+      <label className="block">
+        <span className={fieldLabel}>Phone</span>
         <input
           type="tel"
           name="phone"
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          autoComplete="tel"
+          className={fieldInput}
         />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-navy">Message</label>
+      </label>
+      <label className="block">
+        <span className={fieldLabel}>Message</span>
         <textarea
           name="message"
           required
           rows={5}
           defaultValue={defaultMessage}
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          className={fieldInput}
         />
-      </div>
+      </label>
       {state && (
-        <p
-          className={`text-sm ${
-            state.success ? "text-emerald-600" : "text-red-600"
-          }`}
-        >
+        <p role="status" className={formMessage(state.success)}>
           {state.message}
         </p>
       )}
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-cream hover:bg-navy-light disabled:opacity-60"
+        className={`mt-2 ${primaryButton}`}
       >
         {pending ? "Sending..." : "Send Message"}
       </button>

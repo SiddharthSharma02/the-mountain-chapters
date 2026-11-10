@@ -1,15 +1,16 @@
 import type { RoadTripChapter } from "@/lib/types/database";
 import { Field, inputClass } from "@/components/admin/form-field";
+import { AdminForm, SubmitButton } from "@/components/admin/admin-form";
 
 export function RoadTripForm({
   chapter,
   action,
 }: {
   chapter?: RoadTripChapter;
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<{ error: string } | undefined>;
 }) {
   return (
-    <form action={action} className="flex max-w-xl flex-col gap-4">
+    <AdminForm action={action} className="flex max-w-xl flex-col gap-4">
       <Field label="Title">
         <input name="title" required defaultValue={chapter?.title} className={inputClass} />
       </Field>
@@ -83,12 +84,7 @@ export function RoadTripForm({
           className={inputClass}
         />
       </Field>
-      <button
-        type="submit"
-        className="mt-2 self-start rounded-full bg-navy px-6 py-3 text-sm font-semibold text-cream hover:bg-navy-light"
-      >
-        {chapter ? "Save Changes" : "Create Chapter"}
-      </button>
-    </form>
+      <SubmitButton>{chapter ? "Save Changes" : "Create Chapter"}</SubmitButton>
+    </AdminForm>
   );
 }

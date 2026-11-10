@@ -32,6 +32,12 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Double-guarded: proxy checks on every request + dashboard layout checks again
 - Admin role is stored in `profiles.role` (not `user_metadata`)
 - `public.is_admin()` DB function checks the role
+- Every admin Server Action must go through `adminMutation()` / `requireAdminClient()` (`lib/auth/`): actions are public POST endpoints, so the proxy and layout checks don't cover them. Return `{ error }` instead of throwing so `AdminForm` / `ActionButton` can show it.
+- Only admins can change `profiles.role` (trigger in `20261110120000_protect_profile_role.sql`).
+
+### Public site
+- Render remote images with `SafeImage` (`components/ui/safe-image.tsx`), never raw `next/image`: unknown hosts render unoptimised instead of crashing the page.
+- Public forms include `<SpamTrap />` and their actions call `isLikelySpam()` (`lib/spam.ts`).
 
 ### Stays (Stay Builder)
 - Relational model: `stays` → `stay_images`, `stay_amenities`, `stay_sections` (story), `stay_reviews`, `stay_faqs`, `stay_policies`, `stay_nearby_places`, `rooms` → `room_images`, `room_amenities`, `room_rate_plans`.

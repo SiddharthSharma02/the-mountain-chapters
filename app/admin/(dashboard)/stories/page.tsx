@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { setStoryStatus, deleteStory } from "@/lib/actions/admin-stories";
-import { DeleteButton } from "@/components/admin/delete-button";
+import { ActionButton, DeleteButton } from "@/components/admin/delete-button";
 
 const STATUS_STYLES: Record<string, string> = {
   pending: "bg-amber-100 text-amber-700",
@@ -49,18 +49,10 @@ export default async function AdminStoriesPage() {
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-3">
                     {s.status !== "approved" && (
-                      <form action={setStoryStatus.bind(null, s.id, "approved")}>
-                        <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
-                          Approve
-                        </button>
-                      </form>
+                      <ActionButton action={setStoryStatus.bind(null, s.id, "approved")} label="Approve" className="text-sm font-medium text-emerald-600 hover:text-emerald-700" />
                     )}
                     {s.status !== "rejected" && (
-                      <form action={setStoryStatus.bind(null, s.id, "rejected")}>
-                        <button className="text-sm font-medium text-amber-600 hover:text-amber-700">
-                          Reject
-                        </button>
-                      </form>
+                      <ActionButton action={setStoryStatus.bind(null, s.id, "rejected")} label="Reject" className="text-sm font-medium text-amber-600 hover:text-amber-700" />
                     )}
                     <DeleteButton action={deleteStory.bind(null, s.id)} />
                   </div>

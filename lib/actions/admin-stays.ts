@@ -1,16 +1,21 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { adminMutation, check, type AdminResult } from "@/lib/auth/admin-mutation";
 import { revalidatePath } from "next/cache";
 
-export async function deleteStay(id: string) {
-  const supabase = await createClient();
-  const { data: stay } = await supabase.from("stays").select("slug").eq("id", id).maybeSingle();
-  // Rooms, images, sections, reviews etc. are removed by ON DELETE CASCADE.
-  const { error } = await supabase.from("stays").delete().eq("id", id);
-  if (error) throw new Error(error.message);
+export async function deleteStay(id: string): Promise<AdminResult> {
+  let slug: string | null = null;
+  const result = await adminMutation(async (supabase) => {
+    const { data: stay } = await supabase.from("stays").select("slug").eq("id", id).maybeSingle();
+    slug = stay?.slug ?? null;
+    // Rooms, images, sections, reviews etc. are removed by ON DELETE CASCADE.
+    const { error } = await supabase.from("stays").delete().eq("id", id);
+    check(error);
+  });
+  if (result) return result;
   revalidatePath("/admin/stays");
   revalidatePath("/stays");
-  if (stay?.slug) revalidatePath(`/stays/${stay.slug}`);
+  if (slug) revalidatePath(`/stays/${slug}`);
   revalidatePath("/");
+  return undefined;
 }

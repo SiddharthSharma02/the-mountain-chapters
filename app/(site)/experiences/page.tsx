@@ -1,57 +1,42 @@
-import Image from "next/image";
+import { EmptyState, PageHeader } from "@/components/site/page-header";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import { getExperiences } from "@/lib/data/content";
 
-export const metadata = { title: "Experiences | The Mountain Chapters" };
+export const metadata = { title: "Experiences" };
 
 export default async function ExperiencesPage() {
   const experiences = await getExperiences();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="font-serif text-3xl font-bold text-navy sm:text-4xl">
-        Experiences
-      </h1>
-      <p className="mt-2 max-w-xl text-navy/70">
-        Trekking, off-road adventures, village walks and everything in
-        between — curated and authentic.
-      </p>
-
+    <>
+      <PageHeader
+        eyebrow="Things to do"
+        title="Between the drives"
+        intro="Treks, village walks, orchard mornings and off-road days, arranged with local hosts."
+      />
       {experiences.length > 0 ? (
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-7xl gap-x-6 gap-y-12 px-4 pb-24 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8">
           {experiences.map((e) => (
-            <div
-              key={e.id}
-              className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-navy/5"
-            >
+            <article key={e.id} className="flex flex-col">
               {e.cover_image && (
-                <div className="relative aspect-4/3 w-full">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-[24px] bg-cream-dark">
                   <Image
                     src={e.cover_image}
-                    alt={e.title}
+                    alt=""
                     fill
+                    sizes="(min-width: 1024px) 31vw, (min-width: 640px) 45vw, 90vw"
                     className="object-cover"
                   />
                 </div>
               )}
-              <div className="p-5">
-                <p className="font-serif text-lg font-semibold text-navy">
-                  <span className="mr-2">{e.icon}</span>
-                  {e.title}
-                </p>
-                {e.description && (
-                  <p className="mt-2 text-sm text-navy/70">
-                    {e.description}
-                  </p>
-                )}
-              </div>
-            </div>
+              <h2 className={`${e.cover_image ? "mt-4" : ""} px-1 font-serif text-2xl leading-snug text-navy`}>{e.title}</h2>
+              {e.description && <p className="mt-2 px-1 text-[15px] leading-relaxed text-navy/70">{e.description}</p>}
+            </article>
           ))}
         </div>
       ) : (
-        <div className="mt-10 rounded-2xl border border-dashed border-navy/20 p-10 text-center text-navy/50">
-          No experiences yet. Add some from the admin dashboard.
-        </div>
+        <EmptyState message="Experiences are coming soon. Tell us what you'd love to do." />
       )}
-    </div>
+    </>
   );
 }

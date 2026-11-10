@@ -15,24 +15,26 @@ export default function AdminLoginPage() {
         <p className="mt-1 text-sm text-navy/60">Admin Dashboard</p>
 
         <form action={formAction} className="mt-6 flex flex-col gap-4">
-          <div>
-            <label className="text-sm font-medium text-navy">Email</label>
+          <label className="block">
+            <span className="text-sm font-medium text-navy">Email</span>
             <input
               type="email"
               name="email"
+              autoComplete="email"
               required
               className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
             />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-navy">Password</label>
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium text-navy">Password</span>
             <input
               type="password"
               name="password"
+              autoComplete="current-password"
               required
               className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
             />
-          </div>
+          </label>
           {state && !state.success && (
             <p className="text-sm text-red-600">{state.message}</p>
           )}

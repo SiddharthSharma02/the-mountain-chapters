@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import type { GalleryImage } from "@/lib/types/database";
 import { Lightbox, type LightboxImage } from "@/components/site/lightbox";
 import { useState } from "react";
@@ -15,13 +15,13 @@ export function GalleryGrid({ images }: { images: GalleryImage[] }) {
 
   return (
     <>
-      <div className="mt-10 columns-2 gap-4 sm:columns-3 lg:columns-4 [&>*]:mb-4">
+      <div className="columns-2 gap-3 sm:gap-4 sm:columns-3 lg:columns-4 [&>*]:mb-3 sm:[&>*]:mb-4">
         {images.map((img, i) => (
           <button
             key={img.id}
             type="button"
             onClick={() => setIndex(i)}
-            className="group relative block w-full overflow-hidden rounded-2xl"
+            className="group relative block w-full overflow-hidden rounded-[18px] bg-cream-dark"
           >
             <Image
               src={img.image_url}

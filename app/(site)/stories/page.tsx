@@ -1,39 +1,33 @@
 import Link from "next/link";
+import { ArrowRight } from "@/components/site/icons";
+import { EmptyState, PageHeader } from "@/components/site/page-header";
 import { StoryList } from "@/components/site/story-list";
 import { getApprovedStories } from "@/lib/data/content";
 
-export const metadata = { title: "Travel Stories | The Mountain Chapters" };
+export const metadata = { title: "Travel Stories" };
 
 export default async function StoriesPage() {
   const stories = await getApprovedStories();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-navy sm:text-4xl">
-            Travel Stories
-          </h1>
-          <p className="mt-2 max-w-xl text-navy/70">
-            Real stories from real travellers who found their chapter in the
-            mountains.
-          </p>
-        </div>
+    <>
+      <PageHeader
+        eyebrow="From our travellers"
+        title="Stories from the road"
+        intro="Written by people who found their chapter in the mountains."
+      >
         <Link
           href="/stories/new"
-          className="rounded-full bg-gold px-6 py-3 text-sm font-semibold text-navy hover:bg-gold-dark"
+          className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-navy px-6 text-sm font-semibold text-cream hover:bg-navy-light"
         >
-          Share Your Story
+          Share your story <ArrowRight />
         </Link>
-      </div>
-
+      </PageHeader>
       {stories.length > 0 ? (
         <StoryList stories={stories} />
       ) : (
-        <div className="mt-10 rounded-2xl border border-dashed border-navy/20 p-10 text-center text-navy/50">
-          No stories yet. Be the first to share yours!
-        </div>
+        <EmptyState message="No stories yet. Been to the mountains with us? Yours could be the first." />
       )}
-    </div>
+    </>
   );
 }

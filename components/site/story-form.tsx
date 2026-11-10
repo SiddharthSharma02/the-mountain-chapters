@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useActionState, useEffect, useRef } from "react";
+import { fieldInput, fieldLabel, formMessage, primaryButton } from "@/components/site/form-styles";
+import { SpamTrap } from "@/components/site/spam-trap";
 import { submitTravelStory } from "@/lib/actions/stories";
 
 export function StoryForm({ defaultAuthorName }: { defaultAuthorName?: string }) {
@@ -16,58 +18,55 @@ export function StoryForm({ defaultAuthorName }: { defaultAuthorName?: string })
 
   return (
     <form ref={formRef} action={formAction} className="mt-8 flex flex-col gap-4">
-      <div>
-        <label className="text-sm font-medium text-navy">Your Name</label>
+      <SpamTrap />
+      <label className="block">
+        <span className={fieldLabel}>Your Name</span>
         <input
           type="text"
           name="author_name"
+          autoComplete="name"
           required
           defaultValue={defaultAuthorName}
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          className={fieldInput}
         />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-navy">Story Title</label>
+      </label>
+      <label className="block">
+        <span className={fieldLabel}>Story Title</span>
         <input
           type="text"
           name="title"
           required
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          className={fieldInput}
         />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-navy">
-          Cover Image URL
-        </label>
+      </label>
+      <label className="block">
+        <span className={fieldLabel}>Cover photo link <span className="font-normal text-navy/50">(optional)</span></span>
         <input
           type="url"
           name="cover_image"
-          placeholder="https://..."
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          placeholder="https://…"
+          inputMode="url"
+          className={fieldInput}
         />
-      </div>
-      <div>
-        <label className="text-sm font-medium text-navy">Your Story</label>
+      </label>
+      <label className="block">
+        <span className={fieldLabel}>Your Story</span>
         <textarea
           name="content"
           required
           rows={8}
-          className="mt-1 w-full rounded-lg border border-navy/20 px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+          className={fieldInput}
         />
-      </div>
+      </label>
       {state && (
-        <p
-          className={`text-sm ${
-            state.success ? "text-emerald-600" : "text-red-600"
-          }`}
-        >
+        <p role="status" className={formMessage(state.success)}>
           {state.message}
         </p>
       )}
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-cream hover:bg-navy-light disabled:opacity-60"
+        className={`mt-2 ${primaryButton}`}
       >
         {pending ? "Submitting..." : "Submit Story"}
       </button>
@@ -83,23 +82,29 @@ export function NewStoryPageContent({
   signedIn: boolean;
 }) {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="font-serif text-3xl font-bold text-navy">
-        Share Your Story
-      </h1>
-      <p className="mt-2 text-sm text-navy/60">
-        Tell us about your journey. You must be signed in — stories are
-        reviewed before publishing.{" "}
-        {!signedIn && (
-          <Link
-            href="/login"
-            className="font-semibold text-gold-dark hover:text-gold"
-          >
-            Sign in
-          </Link>
-        )}
+    <div className="mx-auto w-full max-w-2xl px-5 py-16 sm:py-24">
+      <p className="eyebrow">Traveller stories</p>
+      <h1 className="mt-4 font-serif text-[40px] leading-[1.05] text-navy sm:text-5xl">Share your story</h1>
+      <p className="mt-4 text-base leading-relaxed text-navy/70">
+        Tell us about your journey in your own words. We read every story before it&apos;s published.
       </p>
-      <StoryForm defaultAuthorName={defaultAuthorName} />
+      {signedIn ? (
+        <StoryForm defaultAuthorName={defaultAuthorName} />
+      ) : (
+        <div className="mt-10 rounded-[24px] bg-cream-dark/60 p-8">
+          <p className="font-serif text-2xl text-navy">Sign in to share a story</p>
+          <p className="mt-2 text-sm text-navy/65">An account lets you come back and see when your story is live.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/login" className={primaryButton}>Sign in</Link>
+            <Link
+              href="/signup"
+              className="inline-flex min-h-13 items-center rounded-full px-7 text-[15px] font-semibold text-navy ring-1 ring-navy/20 hover:ring-navy"
+            >
+              Create an account
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

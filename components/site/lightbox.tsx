@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import { useCallback, useEffect } from "react";
 
 export interface LightboxImage {

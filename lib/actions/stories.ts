@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { isLikelySpam } from "@/lib/spam";
+import { safeImageUrl } from "@/lib/stays/validation";
 import { revalidatePath } from "next/cache";
 
 function slugify(input: string) {
@@ -40,6 +42,16 @@ export async function submitTravelStory(
   if (!title || !content || !authorName) {
     return { success: false, message: "Please fill in all required fields." };
   }
+  if (title.length > 160 || authorName.length > 120 || content.length > 20000) {
+    return { success: false, message: "Your story is too long. Please shorten it." };
+  }
+  const safeCover = coverImage ? safeImageUrl(coverImage) : null;
+  if (coverImage && !safeCover) {
+    return { success: false, message: "The cover image must be an https:// link." };
+  }
+  if (isLikelySpam(formData)) {
+    return { success: true, message: "Thanks for sharing! Your story is pending approval." };
+  }
 
   const { error } = await supabase.from("travel_stories").insert({
     submitted_by: user.id,
@@ -48,7 +60,7 @@ export async function submitTravelStory(
     title,
     slug: slugify(title),
     content,
-    cover_image: coverImage || null,
+    cover_image: safeCover,
     status: "pending",
   });
 

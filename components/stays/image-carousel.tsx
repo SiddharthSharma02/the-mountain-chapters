@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SafeImage as Image } from "@/components/ui/safe-image";
 import { useCallback, useRef, useState } from "react";
 import { ChevronIcon } from "@/components/stays/icons";
 import { FALLBACK_IMAGE, IMAGE_PLACEHOLDER } from "@/lib/stays/image";

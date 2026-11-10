@@ -1,15 +1,16 @@
 import type { MapRoute } from "@/lib/types/database";
 import { Field, inputClass } from "@/components/admin/form-field";
+import { AdminForm, SubmitButton } from "@/components/admin/admin-form";
 
 export function RouteForm({
   route,
   action,
 }: {
   route?: MapRoute;
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<{ error: string } | undefined>;
 }) {
   return (
-    <form action={action} className="flex max-w-xl flex-col gap-4">
+    <AdminForm action={action} className="flex max-w-xl flex-col gap-4">
       <Field label="Route Name">
         <input name="name" required defaultValue={route?.name} className={inputClass} />
       </Field>
@@ -37,12 +38,7 @@ export function RouteForm({
           className={inputClass}
         />
       </Field>
-      <button
-        type="submit"
-        className="mt-2 self-start rounded-full bg-navy px-6 py-3 text-sm font-semibold text-cream hover:bg-navy-light"
-      >
-        {route ? "Save Changes" : "Create Route"}
-      </button>
-    </form>
+      <SubmitButton>{route ? "Save Changes" : "Create Route"}</SubmitButton>
+    </AdminForm>
   );
 }

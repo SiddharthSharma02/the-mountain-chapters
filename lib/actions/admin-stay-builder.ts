@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { uploadImage } from "@/lib/storage/upload";
+import { requireAdminClient } from "@/lib/auth/require-admin";
 import {
   isUuid,
   isValidUploadFolder,
@@ -25,12 +26,7 @@ type Client = Awaited<ReturnType<typeof createClient>>;
 type Raw = Record<string, unknown>;
 
 /** Defense in depth: the proxy, the dashboard layout and RLS already gate admins. */
-async function requireAdmin(): Promise<Client> {
-  const supabase = await createClient();
-  const { data } = await supabase.rpc("is_admin");
-  if (data !== true) throw new Error("Not authorised.");
-  return supabase;
-}
+const requireAdmin: () => Promise<Client> = requireAdminClient;
 
 async function guard<T>(fn: (s: Client) => Promise<ActionResult<T>>): Promise<ActionResult<T>> {
   try {
